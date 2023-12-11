@@ -1,0 +1,20 @@
+name: dart_ops_engine
+description: 一个使用dart实现的fastlane自动化流程引擎.
+version: 1.0.0
+repository: https://github.com/DartOpsHub/DartOpsEngine
+
+environment:
+  sdk: ^3.1.0
+
+# Add regular dependencies here.
+dependencies:
+  path: ^1.8.0
+  args: ^2.4.2
+  process_run: ^0.13.3
+
+dev_dependencies:
+  lints: ^2.0.0
+  test: ^1.21.0
+
+executables:
+  dart_ops_engine:
