@@ -1,5 +1,16 @@
-import 'package:dart_ops_engine/dart_ops_engine.dart' as dart_ops_engine;
+import 'package:args/command_runner.dart';
 
-void main(List<String> arguments) {
-  print('Hello world: ${dart_ops_engine.calculate()}!');
+Future<void> main(List<String> arguments) async {
+  final commandRunner = CommandRunner('dart_ops_engine', 'dart流程引擎工具');
+
+  commandRunner.argParser.addOption(
+    'root',
+    abbr: 'r',
+    help: '项目目录',
+    callback: (p0) {
+      print("->>>>>>>$p0");
+    },
+  );
+
+  await commandRunner.run(arguments);
 }
