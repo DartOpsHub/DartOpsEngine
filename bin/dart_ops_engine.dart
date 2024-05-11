@@ -1,16 +1,9 @@
-import 'package:args/command_runner.dart';
+import 'package:dart_ops_engine/commons/dart_ops_engine.dart';
+
+import 'test_action.dart';
 
 Future<void> main(List<String> arguments) async {
-  final commandRunner = CommandRunner('dart_ops_engine', 'dart流程引擎工具');
-
-  commandRunner.argParser.addOption(
-    'root',
-    abbr: 'r',
-    help: '项目目录',
-    callback: (p0) {
-      print("->>>>>>>$p0");
-    },
-  );
-
-  await commandRunner.run(arguments);
+  final engine = DartOpsEngine('dart_ops', arguments);
+  engine.addAction('test', TestAction());
+  await engine.run();
 }

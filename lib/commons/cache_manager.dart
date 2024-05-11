@@ -1,4 +1,3 @@
-import 'package:dart_ops_engine/commons/action.dart';
 import 'package:dart_ops_engine/commons/execute.dart';
 import 'package:path/path.dart';
 
@@ -17,10 +16,13 @@ class CacheManager {
       join(executeDir, "${execute.id}", '.env');
 
   /// 单个Action请求内容文件
-  String actionRequestFilePath(Execute execute, Action action) =>
-      join(executeDir, "${execute.id}", "request_${action.name}.json");
+  String actionRequestFilePath(Execute execute, String actionId) =>
+      join(executeDir, "${execute.id}", actionId, 'request.json');
 
   /// 请求Action的返回内容文件
-  String actionResponseFilePath(Execute execute, Action action) =>
-      join(executeDir, "${execute.id}", "response_${action.name}.json");
+  String actionResponseFilePath(Execute execute, String actionId) =>
+      join(executeDir, "${execute.id}", actionId, 'response.json');
+
+  String configFilePath(Execute execute) =>
+      join(executeDir, "${execute.id}", "config.json");
 }

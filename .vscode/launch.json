@@ -5,13 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "dart_ops_engine",
+            "name": "debug",
             "request": "launch",
             "type": "dart",
             "program": "bin/dart_ops_engine.dart",
             "args": [
-                "-r",
-                "/Users/king/Documents/dart_ops_engine"
+                "test",
+                "--id",
+                "12231321123",
+                "--args=name1=value1",
+                "--env=PWD",
+                "--res=argName_actionName@index=name,1,2,3"
             ]
         }
     ]
