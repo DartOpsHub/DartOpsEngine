@@ -59,15 +59,14 @@ class DartOpsEngine {
           data[name] = value;
         }
       } else if (arg.startsWith('--res=')) {
-        // --res=argName_actionName@index=name,1,2,3
-        final contents = arg.substring(6).split('_');
+        // --res=a|index|name,1,2,3
+        final contents = arg.substring(6).split('|');
+        if (contents.length != 3) continue;
         final argName = JSON(contents)[0].string;
-        final argValues = JSON(contents)[1].stringValue.split('=');
-        final actionValues = JSON(argValues)[0].stringValue.split('@');
-        final actionName = JSON(actionValues)[0].stringValue;
-        final actionIndex = JSON(actionValues)[1].intValue;
-        final keys = JSON(argValues)[1].stringValue.split(',');
-        final responseMap = await execute.responseData(actionName, actionIndex);
+        final index = JSON(contents)[1].intValue;
+        final action = execute.actions[index];
+        final responseMap = await execute.responseData(action);
+        final keys = JSON(contents)[2].stringValue.split(',');
         final value = JSON(responseMap)[keys].string;
         if (value != null && argName != null) {
           data[argName] = value;

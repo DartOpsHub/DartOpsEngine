@@ -10,12 +10,9 @@
             "type": "dart",
             "program": "bin/dart_ops_engine.dart",
             "args": [
-                "test",
-                "--id",
-                "12231321123",
-                "--args=name1=value1",
-                "--env=PWD",
-                "--res=argName_actionName@index=name,1,2,3"
+                "execute",
+                "--path",
+                "/Users/king/Documents/dart_ops_engine/execute.json"
             ]
         }
     ]

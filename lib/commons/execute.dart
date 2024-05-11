@@ -8,6 +8,8 @@ import 'package:dart_ops_engine/defines/define.dart';
 import 'package:darty_json_safe/darty_json_safe.dart';
 import 'package:path/path.dart';
 import 'package:process_run/process_run.dart';
+import 'package:dcm/dcm.dart';
+import 'package:process_run/shell.dart';
 
 /// 一个流程一个执行器
 class Execute {
@@ -33,7 +35,7 @@ class Execute {
       final data = await jsonFromPath(cacheManager.configFilePath(this));
       if (data != null) {
         configs.clear();
-        configs.addAll(data);
+        configs.addAll(JSON(data).listValue.map((e) => e as Map).toList());
       }
     }
     for (var config in JSON(configs).listValue) {
@@ -46,23 +48,27 @@ class Execute {
             .toList(),
         actionType: JSON(config)['actionType'].stringValue,
         index: actions.where((element) => element.name == name).toList().length,
+        commandName: JSON(config)['commandName'].string,
       );
       actions.add(action);
     }
   }
 
-  void close() async {
+  Future<void> close() async {
     await _saveEnv(memoryEnv);
-    await saveJsonFromPath(cacheManager.configFilePath(this), configs);
   }
 
   Future<void> run() async {
+    await saveJsonFromPath(cacheManager.configFilePath(this), configs);
     for (var i = 0; i < actions.length; i++) {
       final action = actions[i];
       final shellText = action.argument.join(' ');
       var shellName = action.name;
-      if (action.actionType == 'dart') {
-        shellName = 'dcm run ${action.name} ${action.commandName!}';
+      final name = action.name.split('@').first;
+      final ref = action.name.split('@').last;
+      if (action.actionType == 'dart' && action.commandName != null) {
+        shellName =
+            '${exePath(name, ref)} ${action.commandName} --id $id --index ${action.id}';
       }
       final shell = Shell(workingDirectory: memoryEnv['PWD']);
       final results = await shell.run('$shellName $shellText');
@@ -74,14 +80,10 @@ class Execute {
           );
         }
       }
-      if (results.any((element) => element.errText.isEmpty)) {
+      if (results.any((element) => element.errText.isNotEmpty)) {
         exit(2);
       }
     }
-  }
-
-  void add(Action action) {
-    actions.add(action);
   }
 
   /// 获取环境变量
@@ -126,14 +128,9 @@ class Execute {
     await saveJsonFromPath(path, data);
   }
 
-  Future<Map?> responseData(String actionName, int index) async {
-    final action =
-        JSON(actions.where((element) => element.name == actionName).toList())[
-                index]
-            .rawValue;
-    if (action == null) return null;
-    final path = cacheManager.actionResponseFilePath(this, action);
-    return jsonFromPath(path).then((value) => value as Map);
+  Future<Map?> responseData(Action action) async {
+    final path = cacheManager.actionResponseFilePath(this, action.id);
+    return jsonFromPath(path).then((value) => JSON(value).map);
   }
 
   Future<void> saveResponseData(Map data, String actionId) async {
