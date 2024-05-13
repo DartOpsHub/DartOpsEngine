@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:path/path.dart';
-import 'package:process_run/process_run.dart';
 import 'package:color_logger/color_logger.dart';
 import 'package:process_run/shell.dart';
 

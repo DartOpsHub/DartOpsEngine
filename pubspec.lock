@@ -116,10 +116,11 @@ packages:
   dcm:
     dependency: "direct main"
     description:
-      path: "/Users/king/Documents/dcm"
-      relative: false
-    source: path
-    version: "1.6.1"
+      name: dcm
+      sha256: "79a0f2f144aa0acfbb58a2cdd8ddec875bc2a91fdc23dd3ced703d0b827e287f"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.7.0"
   file:
     dependency: transitive
     description:
