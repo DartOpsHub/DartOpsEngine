@@ -22,3 +22,5 @@ Future<void> saveJsonFromPath(String path, dynamic data) async {
   }
   await file.writeAsString(json.encode(data));
 }
+
+const dcmPrefix = 'dart_ops_hub';

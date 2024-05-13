@@ -38,17 +38,7 @@ class Execute {
       }
     }
     for (var config in JSON(configs).listValue) {
-      final name = JSON(config)['name'].stringValue;
-      final action = Action(
-        name: JSON(config)['name'].stringValue,
-        argument: JSON(config)['argument']
-            .listValue
-            .map((e) => e.toString())
-            .toList(),
-        actionType: JSON(config)['actionType'].stringValue,
-        index: actions.where((element) => element.name == name).toList().length,
-        commandName: JSON(config)['commandName'].string,
-      );
+      final action = Action.fromJson(config);
       actions.add(action);
     }
   }
@@ -67,7 +57,7 @@ class Execute {
       final ref = action.name.split('@').last;
       if (action.actionType == 'dart' && action.commandName != null) {
         shellName =
-            '${exePath(name, ref)} ${action.commandName} --id $id --index ${action.id}';
+            '${Path(dcmPrefix).exePath(name, ref)} ${action.commandName} --id $id --index ${action.id}';
       }
       final shell = Shell(workingDirectory: memoryEnv['PWD']);
       final results = await shell.run('$shellName $shellText');
@@ -112,13 +102,8 @@ class Execute {
     await envFile.writeAsString(envContents.join('\n'));
   }
 
-  Future<Map?> requestData(String actionName, int index) async {
-    final action =
-        JSON(actions.where((element) => element.name == actionName).toList())[
-                index]
-            .rawValue;
-    if (action == null) return null;
-    final path = cacheManager.actionRequestFilePath(this, action);
+  Future<Map?> requestData(Action action) async {
+    final path = cacheManager.actionRequestFilePath(this, action.id);
     return jsonFromPath(path).then((value) => value as Map);
   }
 

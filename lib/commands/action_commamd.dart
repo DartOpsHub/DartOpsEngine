@@ -1,9 +1,8 @@
 import 'dart:async';
 
 import 'package:args/command_runner.dart';
-import 'package:dart_ops_engine/commons/action_run.dart';
 import 'package:dart_ops_engine/commons/dart_ops_engine.dart';
-import 'package:dart_ops_engine/commons/execute.dart';
+import 'package:dart_ops_engine/dart_ops_engine.dart';
 import 'package:darty_json_safe/darty_json_safe.dart';
 
 class ActionCommand extends Command {
@@ -29,14 +28,22 @@ class ActionCommand extends Command {
 
   @override
   FutureOr? run() async {
-    final id = JSON(argResults?['id']).intValue;
+    final id = JSON(argResults?['id']).int;
     final index = JSON(argResults?['index']).stringValue;
-    final execute = Execute.cache(id);
+    final execute = Unwrap(id).map((e) => Execute.cache(e)).value;
     final data = await DartOpsEngine.getRequestData(id).then((value) =>
         value.map((key, value) => MapEntry(key.toString(), value.toString())));
     requestArgs.addAll(data);
-    await execute.saveRequestData(data, index);
-    final response = await actionRun.run(execute.memoryEnv, requestArgs);
-    await execute.saveResponseData(response, index);
+    if (execute != null) {
+      await execute.saveRequestData(data, index);
+    }
+
+    final response = await actionRun.run(
+      execute?.memoryEnv ?? Env(),
+      requestArgs,
+    );
+    if (execute != null) {
+      await execute.saveResponseData(response, index);
+    }
   }
 }
