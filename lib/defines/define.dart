@@ -24,3 +24,5 @@ Future<void> saveJsonFromPath(String path, dynamic data) async {
 }
 
 const dcmPrefix = 'dart_ops_hub';
+
+String version = '0.4.0';

@@ -117,7 +117,7 @@ environment:
 
 # Add regular dependencies here.
 dependencies:
-  dart_ops_engine: ^0.3.0
+  dart_ops_engine: ^$version
   darty_json_safe: ^1.0.3
 
 dev_dependencies:
