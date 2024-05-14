@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:args/command_runner.dart';
-import 'package:dart_ops_engine/commons/dart_ops_engine.dart';
 import 'package:dart_ops_engine/dart_ops_engine.dart';
 import 'package:darty_json_safe/darty_json_safe.dart';
 
@@ -44,6 +43,8 @@ class ActionCommand extends Command {
     );
     if (execute != null) {
       await execute.saveResponseData(response, index);
+    } else {
+      print(JSON(response).stringValue);
     }
   }
 }
